@@ -57,12 +57,12 @@ highlight_theme: github
 # ---------------- #
 #      Author      #
 # ---------------- #
-author: Zhuang Ma
+author: 
 organization: 
 organization_url: 
-github_username: mzlogin
+github_username: worldtre
 location: Wuhan, China
-email: chumpma@gmail.com
+email: 736034120@qq.com
 
 # ---------------- #
 #    Navigation    #
@@ -82,17 +82,17 @@ navs:
     mobile-hidden: true
 
   -
-    href: /open-source/
-    label: 开源
-    mobile-hidden: true
+    #href: /open-source/
+    #label: 开源
+    #mobile-hidden: true
 
   -
     href: /fragments/
     label: 片段
 
   -
-    href: /wiki/
-    label: 维基
+    #href: /wiki/
+    #label: 维基
 
   -
     href: /links/
