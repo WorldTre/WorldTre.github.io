@@ -1,0 +1,106 @@
+<html lang="zh"><head><meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="description" content=""/><meta name="keyword"/><title>1-1-逆向分析和脱壳的意义
+-
+田间小舍
+-
+
+安全与逆向技术个人博客</title><link rel="icon" href="/img/favicon.ico"/>
+<link rel="stylesheet" href="/css/style.css">
+
+<link rel="stylesheet" href="/css/helpers.css">
+
+<script src="/js/clipboard/clipboard.min.js"></script>
+
+
+<script src="/js/bootstrap.js"></script>
+
+<script async="async" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="loading-wrapper" data-loading="data-loading"><div class="loading"><span></span><span></span><span></span></div></div><div class="page" data-filter="data-filter"><div class="head" data-show="data-show"><header class="head-header"><div class="head-author"><a class="head-author-link" href="/">田间小舍</a></div><div class="head-right"><button class="bar-wrap" id="bar-wrap-toggle" title="菜单按钮"><span class="bar"></span><span class="bar"></span><span class="bar"></span></button><div class="head-item"><a class="search-button head-item-link"><span>搜索</span>
+<i class="icon icon-search"></i></a></div><div class="head-item"><a class="head-item-link" href="/about">关于</a></div></div></header>
+<div class="menubar-head" id="menubar"><ul class="menubar-ul"><li class="menubar-item"><i class="icon icon-chevron-right"></i>
+<a class="menubar-link" href="/categories/%E5%86%85%E6%A0%B8%E9%A9%B1%E5%8A%A8/">内核驱动</a></li><li class="menubar-item"><i class="icon icon-chevron-right"></i>
+<a class="menubar-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="menubar-item"><i class="icon icon-chevron-right"></i>
+<a class="menubar-link" href="/categories/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91/">安卓逆向</a></li><li class="menubar-item" data-border="data-border"></li><li class="menubar-item"><i class="icon icon-archive"></i>
+<a class="menubar-link" href="/archives">Archives</a></li><li class="menubar-item"><i class="icon icon-tags"></i>
+<a class="menubar-link" href="/tags">Tags</a></li><li class="menubar-item" data-border="data-border"></li><li class="menubar-item"><a class="menubar-link" href="/about"><span>关于</span></a></li></ul><div class="menu-search-box search-button"><div>搜索</div>
+<i class="icon icon-search"></i></div></div></div><div class="main" data-page="post"><article class="post" id="post"><header class="post-head"><h1 class="post-title"><a class="title" href="/2023/05/11/1-1-%E9%80%86%E5%90%91%E5%88%86%E6%9E%90%E5%92%8C%E8%84%B1%E5%A3%B3%E7%9A%84%E6%84%8F%E4%B9%89/">1-1-逆向分析和脱壳的意义</a></h1></header><div class="post-meta"><div class="post-date"><time class="post-time" itemprop="datePublished" title="2023-05-11 19:05:10" datetime="2023-05-11T19:05:10.000Z">2023-05-11</time></div>|
+<div class="post-tag"><ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%89%E5%8D%93%E8%84%B1%E5%A3%B3/" rel="tag">安卓脱壳</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91/" rel="tag">安卓逆向</a></li></ul></div>
+<div class="post-visit"><span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span>访问</span></div></div><div class="post-info"><div class="post-word-count">本文共617字。</div>
+<div class="post-cc">版权声明：署名-非商业性使用-相同方式共享
+
+|
+<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/2.5/cn/">CC BY-NC-SA 2.5 CN</a></div></div><div class="article-entry" itemprop="articleBody"><p>本文描述初步识别安卓加固、逆向分析APP的一般流程。</p>
+<span id="more"></span>
+
+<h2 id="识别加固"><a href="#识别加固" class="headerlink" title="识别加固"></a><strong>识别加固</strong></h2><p><strong>经验方法：判断一个App是否加固，通常可以直接解压查看文件。（各大厂商加固逻辑不相同，导致出现各种特征）</strong></p>
+<p><strong>文件：libjiagu.so(360)   特征类：qihoo360</strong></p>
+<p><strong>使用Android Killer：直接打开APK查看反编译失败信息。</strong></p>
+<p><strong>识别入口点</strong></p>
+<p><strong>AndroidManifest.xml: 清单文件中查找&lt;activity android:name&#x3D;”com.meishshubao.client.activity.StatupActivity” …&#x2F;&gt;</strong></p>
+<p><strong>android Killer: 自动识别入口点。</strong></p>
+<p><img src="https://img.picgo.net/2024/11/01/image4744800e77e603cf.png" alt="image"></p>
+<p><strong>被加壳了：DEX被保护了。</strong></p>
+<p><strong>编译失败：有对反编译工具的应对策略。</strong></p>
+<p><strong>GDA反编译工具</strong></p>
+<p><img src="https://img.picgo.net/2024/11/01/image8fe429c3d4d76e67.png" alt="image"></p>
+<p><strong>Packed: （加固信息，使用了一些腾讯服务）</strong></p>
+<p><strong>360sec{site:jiagu.360.cn}</strong></p>
+<p><strong>bangcle Enterprise Edition{site:<a target="_blank" rel="noopener" href="http://www.bangcle.com}/">www.bangcle.com}</a></strong></p>
+<p><strong>Note：提示被加固，需要先进行脱壳</strong></p>
+<p><strong>识别并非100%准确，但可以用于确定是否被加固</strong></p>
+<p><strong>推进书籍：</strong><br>非虫《Android软件安全与逆向分析》<br>姜维《Android应用安全防护和逆向分析》<br>邓凡平《深入理解Android: Java虚拟机ART》</p>
+<p><strong>脱壳需要了解什么？</strong></p>
+<p><strong>Android平台的apk开发流程有基本的认识，四大组件、App的运行流程等等。只有懂得正向开发，才知道如何逆向分析。</strong></p>
+<h2 id="逆向分析APP的一般流程"><a href="#逆向分析APP的一般流程" class="headerlink" title="逆向分析APP的一般流程"></a><strong>逆向分析APP的一般流程</strong></h2><ol>
+<li><strong>使用自动化检测工具检测apl是否加壳。（或者反编译工具以及依靠经验推断加壳）</strong></li>
+<li><strong>对apk进行脱壳</strong></li>
+<li><strong>使用jeb、jadx、apktool反编译工具对apk反编译</strong></li>
+<li><strong>先通过静态分析得到关键字符串、关键api调用等。快速定位关键代码喝流程。</strong></li>
+<li><strong>无法通过字符串、关键api定位时，则apk可能进行了字符串加密与反射盗用等处理。此时需结合hook、动态调试等方法。</strong></li>
+<li><strong>定位到关键函数后，根据是Java实现还是jni实现进一步进行分析，其中so中的函数逻辑分析难度较大。</strong></li>
+</ol>
+<p><strong>注意事项</strong></p>
+<p><strong>被加固的apk，在脱壳取出dex后，有可能存在magic信息被修改的情况，只需要找到正常的dex文件复制修复即可。</strong></p>
+<p><img src="https://img.picgo.net/2024/11/01/image3500373ae941cf00.png" alt="image"></p>
+<p><strong>onCreateVMP化保护。</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> native <span class="type">void</span> <span class="title">onCreate</span><span class="params">(Bundle arg1)</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>动态注册的函数(例如Check函数)在JNI_OnLoad中，并加了ollvm的保护的情况。</strong></p>
+<p><strong>针对这种情况，通常使用动态调试或者Hook的方式对</strong>RegisterActivity以及art注册<strong>进行监控，以便快速定位到Check函数。</strong></p>
+<p><img src="https://img.picgo.net/2024/11/01/imagecc2a651acf050c8d.png" alt="image"></p>
+</div></article><aside class="post-widget"><h4>目录</h4><nav class="post-toc-wrap" id="post-toc"><ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E8%AF%86%E5%88%AB%E5%8A%A0%E5%9B%BA"><span class="post-toc-number">1.</span> <span class="post-toc-text">识别加固</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E9%80%86%E5%90%91%E5%88%86%E6%9E%90APP%E7%9A%84%E4%B8%80%E8%88%AC%E6%B5%81%E7%A8%8B"><span class="post-toc-number">2.</span> <span class="post-toc-text">逆向分析APP的一般流程</span></a></li></ol></nav></aside></div><footer class="footer-nav"><div class="footer"><div class="back-top" id="back-top" title="Back to top"><i class="icon icon-chevron-bar-up"></i></div><div class="footer-content"><div><span id="busuanzi_container_site_pv"><span id="busuanzi_value_site_pv">?</span>
+PV
+</span><span id="busuanzi_container_site_uv"><span id="busuanzi_value_site_uv">?</span>
+UV</span></div>
+
+Copyright &copy;
+2020<span class="time-divide">-</span>2024
+Chen.
+
+Power by
+<a href="https://hexo.io/" target="_blank" rel="external nofollow">Hexo</a>
+and
+<a href="https://github.com/Cerallin/hexo-theme-yuzu" target="_blank" rel="external nofollow" title="v3.2.5">Theme Yuzu</a>.</div></div></footer>
+<script>window.config = {
+  url_root: '/',
+  meta_path: 'meta.json',
+};
+</script>
+<script src="/js/theme/back-to-top.js"></script>
+
+
+<script src="/js/theme/clipboard.js"></script>
+
+
+<script src="/js/theme/loading.js"></script>
+
+
+<script src="/js/theme/navbar.js"></script>
+
+<script src="/js/theme/search.js"></script>
+
+<script src="/js/theme/toc.js"></script>
+<script>window.onload = function () {
+  for (const moduleName in Theme) {
+    const module = Theme[moduleName];
+    module.register();
+  }
+};</script></div><div class="search-modal" id="search-modal"><div class="card"><div class="card-head"><div class="search-box"><input class="search-input" id="search-input" placeholder="搜索"/><div class="search-button" id="search-button"><div class="icon icon-search"></div></div></div><div class="close-button"><div class="icon icon-x"></div></div></div><div class="card-body"><div class="search-count">共<span id="search-count-num">0</span>条搜索结果。</div><div class="search-result" id="search-result"></div></div></div></div></body></html>

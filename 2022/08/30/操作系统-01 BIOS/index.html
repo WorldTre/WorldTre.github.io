@@ -1,0 +1,90 @@
+<html lang="zh"><head><meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="description" content=""/><meta name="keyword"/><title>操作系统-01 BIOS
+-
+田间小舍
+-
+
+安全与逆向技术个人博客</title><link rel="icon" href="/img/favicon.ico"/>
+<link rel="stylesheet" href="/css/style.css">
+
+<link rel="stylesheet" href="/css/helpers.css">
+
+<script src="/js/clipboard/clipboard.min.js"></script>
+
+
+<script src="/js/bootstrap.js"></script>
+
+<script async="async" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="loading-wrapper" data-loading="data-loading"><div class="loading"><span></span><span></span><span></span></div></div><div class="page" data-filter="data-filter"><div class="head" data-show="data-show"><header class="head-header"><div class="head-author"><a class="head-author-link" href="/">田间小舍</a></div><div class="head-right"><button class="bar-wrap" id="bar-wrap-toggle" title="菜单按钮"><span class="bar"></span><span class="bar"></span><span class="bar"></span></button><div class="head-item"><a class="search-button head-item-link"><span>搜索</span>
+<i class="icon icon-search"></i></a></div><div class="head-item"><a class="head-item-link" href="/about">关于</a></div></div></header>
+<div class="menubar-head" id="menubar"><ul class="menubar-ul"><li class="menubar-item"><i class="icon icon-chevron-right"></i>
+<a class="menubar-link" href="/categories/%E5%86%85%E6%A0%B8%E9%A9%B1%E5%8A%A8/">内核驱动</a></li><li class="menubar-item"><i class="icon icon-chevron-right"></i>
+<a class="menubar-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="menubar-item"><i class="icon icon-chevron-right"></i>
+<a class="menubar-link" href="/categories/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91/">安卓逆向</a></li><li class="menubar-item" data-border="data-border"></li><li class="menubar-item"><i class="icon icon-archive"></i>
+<a class="menubar-link" href="/archives">Archives</a></li><li class="menubar-item"><i class="icon icon-tags"></i>
+<a class="menubar-link" href="/tags">Tags</a></li><li class="menubar-item" data-border="data-border"></li><li class="menubar-item"><a class="menubar-link" href="/about"><span>关于</span></a></li></ul><div class="menu-search-box search-button"><div>搜索</div>
+<i class="icon icon-search"></i></div></div></div><div class="main" data-page="post"><article class="post" id="post"><header class="post-head"><h1 class="post-title"><a class="title" href="/2022/08/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-01%20BIOS/">操作系统-01 BIOS</a></h1></header><div class="post-meta"><div class="post-date"><time class="post-time" itemprop="datePublished" title="2022-08-30 19:05:10" datetime="2022-08-30T19:05:10.000Z">2022-08-30</time></div>|
+<div class="post-tag"><ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统</a></li></ul></div>
+<div class="post-visit"><span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span>访问</span></div></div><div class="post-info"><div class="post-word-count">本文共390字。</div>
+<div class="post-cc">版权声明：署名-非商业性使用-相同方式共享
+
+|
+<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/2.5/cn/">CC BY-NC-SA 2.5 CN</a></div></div><div class="article-entry" itemprop="articleBody"><p>本篇描述了在操作系统启动前，BIOS作用以及运行机制、启动流程。</p>
+<span id="more"></span>
+
+<h3 id="BIOS-Base-Input-Output-System"><a href="#BIOS-Base-Input-Output-System" class="headerlink" title="BIOS  - Base Input &amp; Output System"></a><strong>BIOS  - Base Input &amp; Output System</strong></h3><p><strong>BIOS会在内存中建立</strong>中断向量表<strong>（提供硬件访问的方法）</strong></p>
+<p><strong>BIOS最后将控制权交由</strong>主引导程序<strong>执行</strong></p>
+<p><strong>BIOS不是软件，而是固件（Firmware）</strong></p>
+<p><strong>固件是固化于硬件中的程序，在硬盘出厂前已经烧写固定。</strong></p>
+<h3 id="系统启动流程（X86）"><a href="#系统启动流程（X86）" class="headerlink" title="系统启动流程（X86）"></a><strong>系统启动流程（X86）</strong></h3><p>**BIOS——&gt; 主引导程序——&gt;OS Kernel **</p>
+<p><img src="https://img.picgo.net/2024/11/01/image8d95f4a8d0e81741.png" alt="image"></p>
+<h3 id="BIOS的运行机制"><a href="#BIOS的运行机制" class="headerlink" title="BIOS的运行机制"></a><strong>BIOS的运行机制</strong></h3><p><strong>BIOS烧录存储于ROM中，在上电后映射一个地址0xF0000 - 0xFFFFF （实地址）</strong></p>
+<p><strong>BIOS的入口地址为：0xFFFF0   （只要是程序都需要一个入口地址）</strong></p>
+<p><strong>硬件电路的特殊设计可以使：开机后CPU从0xFFFF0处开始执行</strong></p>
+<p><strong>没有任何程序加载BIOS，通过硬件设计令CPU直接从BIOS入口开始执行</strong></p>
+<h3 id="BIOS的最后使命"><a href="#BIOS的最后使命" class="headerlink" title="BIOS的最后使命"></a><strong>BIOS的最后使命</strong></h3><p><strong>按照用户设置扫描各个存储介质（光驱，软驱，U盘，等）</strong>启动顺序[寻找主引导区]</p>
+<p><strong>发现主引导区后，</strong>将主引导区中的主引导程序载入内存</p>
+<p><strong>主引导程序在内存中的入口地址为0x7C00</strong></p>
+<p><strong>将控制权交由主引导程序执行（</strong>jmp 0x7C00<strong>）</strong></p>
+<p><strong>BIOS如何寻找主引导区?</strong></p>
+<p><strong>主引导区（MBR：Master Boot Record）</strong></p>
+<p><strong>位置：</strong>位于存储介质的最开始位置处，大小为512字节<strong>。</strong></p>
+<p><strong>特点：前512字节的</strong>最后2个有效字节为0x55aa</p>
+<p><strong>数据：</strong>0x55aa之前的数据被视为主引导程序</p>
+<h3 id="更详细的系统启动流程（x86架构）"><a href="#更详细的系统启动流程（x86架构）" class="headerlink" title="更详细的系统启动流程（x86架构）"></a><strong>更详细的系统启动流程（x86架构）</strong></h3><p><img src="https://img.picgo.net/2024/11/01/Ztg-ZzewusBTnYOpABCtm_HUKnMU3IBmbqcrPGTVpoea918d61e6ceb191.png" alt="Ztg ZzewusBTnYOpABCtm HUKnMU3IBmbqcrPGTVpo"></p>
+</div></article><aside class="post-widget"><h4>目录</h4><nav class="post-toc-wrap" id="post-toc"><ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#BIOS-Base-Input-Output-System"><span class="post-toc-number">1.</span> <span class="post-toc-text">BIOS  - Base Input &amp; Output System</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%EF%BC%88X86%EF%BC%89"><span class="post-toc-number">2.</span> <span class="post-toc-text">系统启动流程（X86）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#BIOS%E7%9A%84%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6"><span class="post-toc-number">3.</span> <span class="post-toc-text">BIOS的运行机制</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#BIOS%E7%9A%84%E6%9C%80%E5%90%8E%E4%BD%BF%E5%91%BD"><span class="post-toc-number">4.</span> <span class="post-toc-text">BIOS的最后使命</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E6%9B%B4%E8%AF%A6%E7%BB%86%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%EF%BC%88x86%E6%9E%B6%E6%9E%84%EF%BC%89"><span class="post-toc-number">5.</span> <span class="post-toc-text">更详细的系统启动流程（x86架构）</span></a></li></ol></nav></aside></div><footer class="footer-nav"><div class="footer"><div class="back-top" id="back-top" title="Back to top"><i class="icon icon-chevron-bar-up"></i></div><div class="footer-content"><div><span id="busuanzi_container_site_pv"><span id="busuanzi_value_site_pv">?</span>
+PV
+</span><span id="busuanzi_container_site_uv"><span id="busuanzi_value_site_uv">?</span>
+UV</span></div>
+
+Copyright &copy;
+2020<span class="time-divide">-</span>2024
+Chen.
+
+Power by
+<a href="https://hexo.io/" target="_blank" rel="external nofollow">Hexo</a>
+and
+<a href="https://github.com/Cerallin/hexo-theme-yuzu" target="_blank" rel="external nofollow" title="v3.2.5">Theme Yuzu</a>.</div></div></footer>
+<script>window.config = {
+  url_root: '/',
+  meta_path: 'meta.json',
+};
+</script>
+<script src="/js/theme/back-to-top.js"></script>
+
+
+<script src="/js/theme/clipboard.js"></script>
+
+
+<script src="/js/theme/loading.js"></script>
+
+
+<script src="/js/theme/navbar.js"></script>
+
+<script src="/js/theme/search.js"></script>
+
+<script src="/js/theme/toc.js"></script>
+<script>window.onload = function () {
+  for (const moduleName in Theme) {
+    const module = Theme[moduleName];
+    module.register();
+  }
+};</script></div><div class="search-modal" id="search-modal"><div class="card"><div class="card-head"><div class="search-box"><input class="search-input" id="search-input" placeholder="搜索"/><div class="search-button" id="search-button"><div class="icon icon-search"></div></div></div><div class="close-button"><div class="icon icon-x"></div></div></div><div class="card-body"><div class="search-count">共<span id="search-count-num">0</span>条搜索结果。</div><div class="search-result" id="search-result"></div></div></div></div></body></html>

@@ -1,0 +1,181 @@
+<html lang="zh"><head><meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="description" content=""/><meta name="keyword"/><title>title
+-
+田间小舍
+-
+
+安全与逆向技术个人博客</title><link rel="icon" href="/img/favicon.ico"/>
+<link rel="stylesheet" href="/css/style.css">
+
+<link rel="stylesheet" href="/css/helpers.css">
+
+<script src="/js/clipboard/clipboard.min.js"></script>
+
+
+<script src="/js/bootstrap.js"></script>
+
+<script async="async" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="loading-wrapper" data-loading="data-loading"><div class="loading"><span></span><span></span><span></span></div></div><div class="page" data-filter="data-filter"><div class="head" data-show="data-show"><header class="head-header"><div class="head-author"><a class="head-author-link" href="/">田间小舍</a></div><div class="head-right"><button class="bar-wrap" id="bar-wrap-toggle" title="菜单按钮"><span class="bar"></span><span class="bar"></span><span class="bar"></span></button><div class="head-item"><a class="search-button head-item-link"><span>搜索</span>
+<i class="icon icon-search"></i></a></div><div class="head-item"><a class="head-item-link" href="/about">关于</a></div></div></header>
+<div class="menubar-head" id="menubar"><ul class="menubar-ul"><li class="menubar-item"><i class="icon icon-chevron-right"></i>
+<a class="menubar-link" href="/categories/%E5%86%85%E6%A0%B8%E9%A9%B1%E5%8A%A8/">内核驱动</a></li><li class="menubar-item"><i class="icon icon-chevron-right"></i>
+<a class="menubar-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="menubar-item"><i class="icon icon-chevron-right"></i>
+<a class="menubar-link" href="/categories/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91/">安卓逆向</a></li><li class="menubar-item" data-border="data-border"></li><li class="menubar-item"><i class="icon icon-archive"></i>
+<a class="menubar-link" href="/archives">Archives</a></li><li class="menubar-item"><i class="icon icon-tags"></i>
+<a class="menubar-link" href="/tags">Tags</a></li><li class="menubar-item" data-border="data-border"></li><li class="menubar-item"><a class="menubar-link" href="/about"><span>关于</span></a></li></ul><div class="menu-search-box search-button"><div>搜索</div>
+<i class="icon icon-search"></i></div></div></div><div class="main" data-page="post"><article class="post" id="post"><header class="post-head"><h1 class="post-title"><a class="title" href="/2024/10/27/OLLVM%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%A7%BB%E6%A4%8D/">title</a></h1></header><div class="post-meta"><div class="post-date"><time class="post-time" itemprop="datePublished" title="2024-10-27 03:01:11" datetime="2024-10-27T03:01:11.661Z">2024-10-27</time></div>|
+<div class="post-tag"></div>
+<div class="post-visit"><span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span>访问</span></div></div><div class="post-info"><div class="post-word-count">本文共1,280字。</div>
+<div class="post-cc">版权声明：署名-非商业性使用-相同方式共享
+
+|
+<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/2.5/cn/">CC BY-NC-SA 2.5 CN</a></div></div><div class="article-entry" itemprop="articleBody"><h1 id="5-3-OLLVM简介与移植"><a href="#5-3-OLLVM简介与移植" class="headerlink" title="5-3 OLLVM简介与移植"></a><strong>5-3 OLLVM简介与移植</strong></h1><h1 id="LLVM源码外开发Pass"><a href="#LLVM源码外开发Pass" class="headerlink" title="LLVM源码外开发Pass"></a><strong>LLVM源码外开发Pass</strong></h1><p><strong>在LLVM源码内开发Pass，需要在LLVM源码项目中创建文件目录，才能开发Pass。</strong></p>
+<p><strong>源码外开发Pass，参考：</strong><a target="_blank" rel="noopener" href="https://releases.llvm.org/15.0.0/docs/CMake.html#embedding-llvm-in-your-project">Building LLVM with CMake — LLVM 15.0.0 documentation</a></p>
+<p><strong>源码外开发时，项目的目录格式</strong></p>
+<p><strong>&lt;**project dir**&gt;</strong>&#x2F;</p>
+<p>**    **|</p>
+<p>**    CMakeLists**.<strong>txt</strong></p>
+<p>**    <strong>&lt;**pass name**&gt;</strong>&#x2F;**</p>
+<p>**        **|</p>
+<p>**        CMakeLists**.<strong>txt</strong></p>
+<p>**        Pass**.<strong>cpp</strong></p>
+<p>**        <strong>.</strong>.**.</p>
+<p><strong>project dir&#x2F;CMakeLists.txt内容如下：</strong></p>
+<p><strong>find_package(LLVM REQUIRED CONFIG)</strong></p>
+<p><strong>separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})</strong></p>
+<p><strong>add_definitions(${LLVM_DEFINITIONS_LIST})</strong></p>
+<p><strong>include_directories(${LLVM_INCLUDE_DIRS})</strong></p>
+<p><strong>add_subdirectory(<pass name>)</strong></p>
+<p><strong>project dir&#x2F;pass name&#x2F;CMakeLists.txt内容如下：</strong></p>
+<p><strong>add_library(LLVMPassname MODULE Pass.cpp)</strong></p>
+<p><strong>编译项目</strong></p>
+<p><strong>build cmake ..</strong></p>
+<p><strong>build make</strong></p>
+<p><strong>编译完成后，在项目build目录中，产生so文件</strong></p>
+<p><strong>使用opt加载Pass到IR文件</strong></p>
+<p><strong>opt –load &#x2F;home&#x2F;kanxue&#x2F;ollvm2&#x2F;outpass&#x2F;build&#x2F;FunctionName2&#x2F;libLLVMFunctionName2.so -function helloworld.ll  -o helloworld-opt.bc</strong></p>
+<h1 id="Clang集成Pass"><a href="#Clang集成Pass" class="headerlink" title="Clang集成Pass"></a><strong>Clang集成Pass</strong></h1><p><strong>在VScode命令行中，要llvm编译一个可执行文件，首先需要加载opt产生bc文件，在通过clang编译bc文件得到可执行文件。</strong></p>
+<p><strong>如何使用Clang直接编译可执行文件？</strong></p>
+<p><strong>00：08：30</strong></p>
+<h1 id="OLLVM介绍"><a href="#OLLVM介绍" class="headerlink" title="OLLVM介绍"></a><strong>OLLVM介绍</strong></h1><p><strong>参考：github.com&#x2F;obfuscator-llvm&#x2F;obfuscator&#x2F;wiki</strong></p>
+<p><strong>基于旧版本llvm源码来开发大量混淆功能的Pass，主要支持三种混淆方案</strong></p>
+<p><strong>指令替换，Instructions Substitution</strong> <strong>-mllvm -sub</strong></p>
+<p><strong>原理：等价替换，</strong>a&#x3D;b+c** 替换为 <strong>a&#x3D;b-(-c)</strong> **</p>
+<p><strong>%<strong>0</strong> <strong>&#x3D;</strong> load i32</strong>*** <strong>%<strong>a</strong>,</strong> align <strong>4</strong>    **&#x2F;&#x2F;c取出来</p>
+<p><strong>%<strong>1</strong> <strong>&#x3D;</strong> load i32</strong>*** <strong>%<strong>b</strong>,</strong> align <strong>4</strong>    **&#x2F;&#x2F;b取出来</p>
+<p><strong>%<strong>2</strong> <strong>&#x3D;</strong> sub i32 <strong>0</strong>,</strong> **%<strong>1</strong>            **&#x2F;&#x2F;0-c得负数</p>
+<p>**%<strong>3</strong> <strong>&#x3D;</strong> sub nsw i32 <strong>%<strong>0</strong>,</strong> **%<strong>2</strong>       <strong>&#x2F;&#x2F;b-c得到a</strong></p>
+<p><strong>二次变换，</strong>a&#x3D;b+c** 替换为 **a&#x3D;-(-b+(-c))</p>
+<p><strong>%0 &#x3D; load i32* %a, align 4</strong></p>
+<p><strong>%1 &#x3D; load i32* %b, align 4</strong></p>
+<p><strong>%2 &#x3D; sub i32 0, %0</strong></p>
+<p><strong>%3 &#x3D; sub i32 0, %1</strong></p>
+<p><strong>%4 &#x3D; add i32 %2, %3</strong></p>
+<p><strong>%5 &#x3D; sub nsw i32 0, %4</strong></p>
+<p><strong>随机数,<strong>r &#x3D; rand (); a &#x3D; b + r; a &#x3D; a + c; a &#x3D; a - r</strong> 对同一个随机数进行+和-操作，最终达到平衡</strong></p>
+<p><strong>%<strong>0</strong> <strong>&#x3D;</strong> load i32</strong>*** <strong>%<strong>a</strong>,</strong> align **4</p>
+<p><strong>%<strong>1</strong> <strong>&#x3D;</strong> load i32</strong>*** <strong>%<strong>b</strong>,</strong> align **4</p>
+<p>**%<strong>2</strong> <strong>&#x3D;</strong> add i32 <strong>%<strong>0</strong>,</strong> **1107414009</p>
+<p>**%<strong>3</strong> <strong>&#x3D;</strong> add i32 <strong>%<strong>2</strong>,</strong> **%<strong>1</strong></p>
+<p>**%<strong>4</strong> <strong>&#x3D;</strong> sub nsw i32 <strong>%<strong>3</strong>,</strong> **1107414009</p>
+<p><strong>虚假控制流，Bogus Control Flow</strong> <strong>-mllvm -bcf</strong></p>
+<p><strong>原始代码流程：</strong></p>
+<p>**#<strong>include</strong> **&lt;stdlib.h&gt;</p>
+<p><strong>int</strong> <strong>main</strong>(<strong>int</strong> argc**,** <strong>char</strong>*<strong>*</strong> argv**)** <strong>{</strong></p>
+<p>**  <strong>int</strong> a <strong>&#x3D;</strong> <strong>atoi</strong>(<strong>argv</strong>[<strong>1</strong>]<strong>)</strong>;**</p>
+<p>**  <strong>if</strong>(**a <strong>&#x3D;&#x3D;</strong> <strong>0</strong>)</p>
+<p>**    <strong>return</strong> <strong>1</strong>;**</p>
+<p>**  **else</p>
+<p>**    <strong>return</strong> <strong>10</strong>;**</p>
+<p>**  <strong>return</strong> <strong>0</strong>;**</p>
+<p><strong>}</strong></p>
+<p><img src="https://vipkshttps12.wiz.cn/editor/d69fb215-f6d3-428b-bf72-e05bae86c662/124db7ab-9d7d-4136-8560-12bbe874ab14/resources/O-R3Cq0uLaRag-VrW62byp2MgI3_LPaVAcupzJzogME.png?token=W.p8K-SF1TjjNl0Z9EG6zDA_55aAuZxZLdpi2_jovn0CxZlARDfr5PBlQFJLvQ0XA"></p>
+<p><strong>经过虚假控制流混淆后：</strong></p>
+<p><img src="https://vipkshttps12.wiz.cn/editor/d69fb215-f6d3-428b-bf72-e05bae86c662/124db7ab-9d7d-4136-8560-12bbe874ab14/resources/RQkvi6CClkLN2kEAH_Mqveq7eDJC_IelCT9EZvQAX9g.png?token=W.p8K-SF1TjjNl0Z9EG6zDA_55aAuZxZLdpi2_jovn0CxZlARDfr5PBlQFJLvQ0XA"></p>
+<p><strong>控制流程平坦化，Control Flow Flattening</strong> <strong>-mllvm -fla</strong></p>
+<p><strong>原理：将基本块(if.else)转为switch, 通过对一个变量反复的修改，赋值。来控制进入case的顺序，从而确定执行基本块的顺序。</strong></p>
+<p><strong>原始代码流程：</strong></p>
+<p>**#<strong>include</strong> **&lt;stdlib.h&gt;</p>
+<p><strong>int</strong> <strong>main</strong>(<strong>int</strong> argc**,** <strong>char</strong>*<strong>*</strong> argv**)** <strong>{</strong></p>
+<p>**  <strong>int</strong> a <strong>&#x3D;</strong> <strong>atoi</strong>(<strong>argv</strong>[<strong>1</strong>]<strong>)</strong>;**</p>
+<p>**  <strong>if</strong>(**a <strong>&#x3D;&#x3D;</strong> <strong>0</strong>)</p>
+<p>**    <strong>return</strong> <strong>1</strong>;**</p>
+<p>**  **else</p>
+<p>**    <strong>return</strong> <strong>10</strong>;**</p>
+<p>**  <strong>return</strong> <strong>0</strong>;**</p>
+<p><strong>}</strong></p>
+<p><img src="https://vipkshttps12.wiz.cn/editor/d69fb215-f6d3-428b-bf72-e05bae86c662/124db7ab-9d7d-4136-8560-12bbe874ab14/resources/O-R3Cq0uLaRag-VrW62byp2MgI3_LPaVAcupzJzogME.png?token=W.p8K-SF1TjjNl0Z9EG6zDA_55aAuZxZLdpi2_jovn0CxZlARDfr5PBlQFJLvQ0XA"></p>
+<p><strong>经过控制流平坦化处理：</strong></p>
+<p><img src="https://vipkshttps12.wiz.cn/editor/d69fb215-f6d3-428b-bf72-e05bae86c662/124db7ab-9d7d-4136-8560-12bbe874ab14/resources/vq15vpHjIfhZO9EpqRf-33KppFfxsiS1but7Ix82beg.png?token=W.p8K-SF1TjjNl0Z9EG6zDA_55aAuZxZLdpi2_jovn0CxZlARDfr5PBlQFJLvQ0XA"></p>
+<p><strong>OLLVM函数注解</strong></p>
+<p><strong>通过函数注解可以指定任意函数执行何种混淆特性（因此三种混淆方式可以同时出现在一个程序中）</strong></p>
+<p><strong>int</strong> <strong>foo</strong>(<strong>)</strong> <strong>__attribute</strong>(<strong>(</strong>__annotate__<strong>(</strong>(<strong>“fla”</strong>)<strong>)</strong>)<strong>)</strong>;</p>
+<p><strong>int</strong> <strong>foo</strong>(<strong>)</strong> <strong>{</strong></p>
+<p>**   <strong>return</strong> <strong>2</strong>;**</p>
+<p><strong>}</strong></p>
+<h1 id="移植OLLVM项目"><a href="#移植OLLVM项目" class="headerlink" title="移植OLLVM项目"></a><strong>移植OLLVM项目</strong></h1><p><strong>为了解决ollvm项目只更新到llvm4.0版本的问题，需要把ollvm Obfuscation移植到llvm最新版本中（这里是9.0示例）</strong></p>
+<p><strong>克隆ollvm项目</strong>git clone <a target="_blank" rel="noopener" href="https://github.com/obfuscator-llvm/obfuscator.git">https://github.com/obfuscator-llvm/obfuscator.git</a>** （可能需要切换分支到llvm-4.0）**</p>
+<p><strong>将 <strong>Obfuscation</strong> 代码目录从</strong>Obfuscation&#x2F;lib&#x2F;Transforms&#x2F;Obfuscation** 完整的拷贝到<strong>llvm&#x2F;lib&#x2F;Transforms&#x2F;</strong> 目录下**</p>
+<p><strong>将 <strong>Obfuscation</strong> 头文件目录从</strong>Obfuscation&#x2F;include&#x2F;llvm&#x2F;Transforms&#x2F;Obfuscation** 完整的拷贝到**llvm&#x2F;include&#x2F;llvm&#x2F;Transforms&#x2F;</p>
+<p><strong>查看其他文件的提交信息，把有更改的根据更改内容，对当前llvm进行补充。</strong></p>
+<p><strong>obfuscator&#x2F;lib&#x2F;Tansforms&#x2F;CMakeLists.txt</strong> 中加入了新的子目录<strong>add_subdirectory(Obfuscation)</strong></p>
+<p><strong>obfuscator&#x2F;lib&#x2F;Tansforms&#x2F;LLVMBuild.txt</strong> 中的<strong>subdirectories</strong>中增加<strong>Obfuscation</strong></p>
+<p><strong>obfuscator&#x2F;lib&#x2F;Tansforms&#x2F;IPO&#x2F;LLVMBuild.txt</strong> 中的<strong>required_libraries</strong>中增加<strong>Obfuscation</strong></p>
+<p><strong>obfuscator&#x2F;lib&#x2F;Tansforms&#x2F;IPO&#x2F;PassManagerBuilder.cpp</strong> 查看提交记录，从最初一次提交开始，把新增&#x2F;修改代码复制到llvm的<strong>PassManagerBuilder.cpp</strong> 中</p>
+<p><strong>Obfuscation&#x2F;include&#x2F;llvm&#x2F;CryptoUtils.h</strong> 文件拷贝到<strong>llvm&#x2F;include&#x2F;llvm&#x2F;Tansforms&#x2F;Obfuscation&#x2F;</strong> 目录下</p>
+<p><strong>修改CryptoUtils.cpp中的头文件包含</strong>#include ‘llvm&#x2F;CryptoUtils.h’** 为**#include ‘llvm&#x2F;Transforms&#x2F;Obfuscation&#x2F;CryptoUtils.h’</p>
+<p><strong>编译时其他报错的头文件引用代码，也需要如上方式修改。</strong></p>
+<p><strong>有些llvm中的API在新版本修改了函数的返回值类型，遇到编译错误时，也需要进行调整</strong>Instruction* tbb&#x3D;fi-&gt;getTerminator();</p>
+<p><strong>有些llvm中的API在新版本中删除了，需要将未定义的函数注释掉，</strong>FunctionPass *lower &#x3D; createLowerSwitchPass();lower-&gt;runOnFunction(*f);** （这将导致删除了控制流程平坦化中创建switch的作用）**</p>
+<p><strong>在fork的用户中，找到heroims，参考其他人修复的错误。</strong></p>
+<p><strong>&#x2F;&#x2F;PassManagerBuilder.cpp</strong></p>
+<p><strong>MPM</strong>.<strong>add</strong>(<strong>createBogus</strong>(<strong>BogusControlFlow</strong>)<strong>)</strong>;</p>
+<p>**#<strong>if</strong> **LLVM_VERSION_MAJOR <strong>&gt;&#x3D;</strong> <strong>9</strong></p>
+<p>**    MPM**.<strong>add</strong>(<strong>createLowerSwitchPass</strong>(<strong>)</strong>)<strong>;</strong></p>
+<p>**#**endif</p>
+<p><strong>MPM</strong>.<strong>add</strong>(<strong>createFlattening</strong>(<strong>Flattening</strong>)<strong>)</strong>;</p>
+<p><strong>编译项目：</strong>ninja LLVMObfuscation</p>
+<p><strong>项目编译后产生的只是.a的静态库</strong>lib&#x2F;libLLVMObfuscation.a</p>
+<p><strong>还需要编译Clang：</strong>ninja clang</p>
+<p><strong>生成可执行文件：</strong>clang -mllvm -sub helloworld.c -o helloworld_sub</p>
+<p>**生成IR文件： **clang -emit-llvm -S -mllvm -sub helloworld.c -o helloworld.ll</p>
+<p>**生成原始IR文件（未混淆）： **clang -emit-llvm -S -sub helloworld.c -o helloworld.ll</p>
+<p><strong>混淆IR文件和原始IR文件对比，以便于认识其中的差异</strong></p>
+<p><img src="https://vipkshttps12.wiz.cn/editor/d69fb215-f6d3-428b-bf72-e05bae86c662/124db7ab-9d7d-4136-8560-12bbe874ab14/resources/wlC9F_-NFI7J3MgYrf1SIl4z92ptTsryejHqRq3QrJ4.png?token=W.p8K-SF1TjjNl0Z9EG6zDA_55aAuZxZLdpi2_jovn0CxZlARDfr5PBlQFJLvQ0XA"></p>
+<p><strong>obfuscator</strong> 还需要根据Pull requests修复<strong>BogusControlFlow.cpp</strong>中的一个bug#76防止编译卡死</p>
+</div></article><aside class="post-widget"><h4>目录</h4><nav class="post-toc-wrap" id="post-toc"><ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#5-3-OLLVM%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%A7%BB%E6%A4%8D"><span class="post-toc-number">1.</span> <span class="post-toc-text">5-3 OLLVM简介与移植</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#LLVM%E6%BA%90%E7%A0%81%E5%A4%96%E5%BC%80%E5%8F%91Pass"><span class="post-toc-number">2.</span> <span class="post-toc-text">LLVM源码外开发Pass</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Clang%E9%9B%86%E6%88%90Pass"><span class="post-toc-number">3.</span> <span class="post-toc-text">Clang集成Pass</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#OLLVM%E4%BB%8B%E7%BB%8D"><span class="post-toc-number">4.</span> <span class="post-toc-text">OLLVM介绍</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E7%A7%BB%E6%A4%8DOLLVM%E9%A1%B9%E7%9B%AE"><span class="post-toc-number">5.</span> <span class="post-toc-text">移植OLLVM项目</span></a></li></ol></nav></aside></div><footer class="footer-nav"><div class="footer"><div class="back-top" id="back-top" title="Back to top"><i class="icon icon-chevron-bar-up"></i></div><div class="footer-content"><div><span id="busuanzi_container_site_pv"><span id="busuanzi_value_site_pv">?</span>
+PV
+</span><span id="busuanzi_container_site_uv"><span id="busuanzi_value_site_uv">?</span>
+UV</span></div>
+
+Copyright &copy;
+2020<span class="time-divide">-</span>2024
+Chen.
+
+Power by
+<a href="https://hexo.io/" target="_blank" rel="external nofollow">Hexo</a>
+and
+<a href="https://github.com/Cerallin/hexo-theme-yuzu" target="_blank" rel="external nofollow" title="v3.2.5">Theme Yuzu</a>.</div></div></footer>
+<script>window.config = {
+  url_root: '/',
+  meta_path: 'meta.json',
+};
+</script>
+<script src="/js/theme/back-to-top.js"></script>
+
+
+<script src="/js/theme/clipboard.js"></script>
+
+
+<script src="/js/theme/loading.js"></script>
+
+
+<script src="/js/theme/navbar.js"></script>
+
+<script src="/js/theme/search.js"></script>
+
+<script src="/js/theme/toc.js"></script>
+<script>window.onload = function () {
+  for (const moduleName in Theme) {
+    const module = Theme[moduleName];
+    module.register();
+  }
+};</script></div><div class="search-modal" id="search-modal"><div class="card"><div class="card-head"><div class="search-box"><input class="search-input" id="search-input" placeholder="搜索"/><div class="search-button" id="search-button"><div class="icon icon-search"></div></div></div><div class="close-button"><div class="icon icon-x"></div></div></div><div class="card-body"><div class="search-count">共<span id="search-count-num">0</span>条搜索结果。</div><div class="search-result" id="search-result"></div></div></div></div></body></html>
